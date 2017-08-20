@@ -1,6 +1,10 @@
 var skills = ["Attack","Defence","Strength","Constitution","Ranged","Prayer","Magic","Cooking","Woodcutting","Fletching","Fishing","Firemaking","Crafting","Smithing","Mining","Herblore","Agility","Thieving","Slayer","Farming","Runecrafting","Hunter","Construction","Summoning","Dungeoneering","Divination","Invention"
-];
+]; //Used to turn skill ID's into usable names.
 
+/**
+ * Adds the checks to the quest requirements.
+ * @param {[quests]} userQuests 
+ */
 function addQuestCompletedChecks(userQuests){
     $(".questreq a").each(function(index){
         if ($(this).html().toLowerCase() != "expand" || $(this).html().toLowerCase() != "collapse"){
@@ -15,6 +19,10 @@ function addQuestCompletedChecks(userQuests){
     });
 }
 
+/**
+ * Adds the checks to the skill requirements.
+ * @param {[skillName: level]} userLevels 
+ */
 function addLevelDetailChecks(userLevels){
     $(".questdetails-info > ul > li").each(function(index){
         var textArr = $(this).text().split(" ");
@@ -41,9 +49,14 @@ function addLevelDetailChecks(userLevels){
 
 function loadUserData(username, tries){
     loadUserQuests(username, tries);
-    loadUserStats(username, tries);
+    loadUserSkills(username, tries);
 }
 
+/**
+ * Get the user's quest data and pass it along to function addQuestCompleteChecks()
+ * @param {string} username - The in-game username of the user.
+ * @param {int} tries - The amount of tries to get userdata before giving up.
+ */
 function loadUserQuests(username, tries){
     $.ajax({ // Get the quest data
         type:"GET",
@@ -51,9 +64,8 @@ function loadUserQuests(username, tries){
         success: function(msg){
             if (msg["quests"].length == 0){
                 if (tries <= 0){
-                    console.log("Could not fetch quest data!");
+                    console.error("Could not fetch quest data!");
                 } else {
-                    console.log("Trying quests again!");
                     loadUserData(username, tries-1);
                 }
             } else {
@@ -68,24 +80,26 @@ function loadUserQuests(username, tries){
     });
 }
 
-function loadUserStats(username, tries){
+/**
+ * Loads the users skills and passes it along to the function addLevelDetailChecks().
+ * @param {string} username - The in-game username of the user.
+ * @param {int} tries - The amount of tries to get userdata before giving up.
+ */
+function loadUserSkills(username, tries){
     $.ajax({ // Get the skill data.
         type:"GET",
         url:"https://apps.runescape.com/runemetrics/profile/profile?user=" + username + "&activities=0",
         success: function(msg){
             if ("error" in msg){
                 if (tries <= 0){
-                    console.log("Could not fetch skills data!");
+                    console.error("Could not fetch skills data!");
                 } else {
-                    Console.log("Trying stats again!");
-                    loadUserStats(username, tries-1);
+                    loadUserSkills(username, tries-1);
                 }
             } else {
                 var userLevels = [];
                 msg["skillvalues"].forEach(function(item, index){
-                // console.log(skills[item["id"]] + ": " +item["level"]);
-                    userLevels[skills[item["id"]]] = item["level"];
-                    
+                    userLevels[skills[item["id"]]] = item["level"]; 
                 });
                 addLevelDetailChecks(userLevels);
             }
@@ -93,15 +107,22 @@ function loadUserStats(username, tries){
     });
 }
 
+/**
+ * Get the configuration with standard values in case something is missing.
+ * @param {requestCallback} func - the function which does something with the configuration.
+ */
 function getConfig(func){
     chrome.storage.sync.get({
         username: ""
     }, func);
 }
 
+/**
+ * Load the config and start everything.
+ */
 function init(){
     getConfig(function(config){
-        loadUserData(config.username, 1);
+        loadUserData(config.username, 5);
     });
 }
 
