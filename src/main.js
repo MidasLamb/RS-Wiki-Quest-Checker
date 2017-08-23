@@ -8,7 +8,7 @@ var skills = ["Attack","Defence","Strength","Constitution","Ranged","Prayer","Ma
 function addQuestCompletedChecks(userQuests){
     $(".questreq a").each(function(index){
         if ($(this).html().toLowerCase() != "expand" || $(this).html().toLowerCase() != "collapse"){
-            var questTitle = $(this).html();
+            var questTitle = $(this).html().replace(/^The /,'');
             if (userQuests[questTitle] == "COMPLETED"){
                 $(this).append(' <img src=' + chrome.extension.getURL('assets/images/check.svg') + '>');
             }
