@@ -40,6 +40,7 @@ function addLevelDetailChecks(userLevels){
             if (userLevels[skill] >= level) {
                 skillElement.append(' <img src=' + chrome.extension.getURL('assets/images/check.svg') + '>');
             } else {
+                $(this).prepend(userLevels[skill]+"/");
                 skillElement.append(' <img src=' + chrome.extension.getURL('assets/images/cross.svg') + ' style="width:15px">');
             }
         }
