@@ -71,7 +71,12 @@ function loadUserQuests(username, tries){
             } else {
                 var userQuests = [];
                 msg["quests"].forEach(function(item, index){
-                    userQuests[item["title"]] = item["status"];               
+                    if (item["title"] === "Curse of Arrav" || item["title"] === "Chosen Commander"){
+                        userQuests["The " + item["title"]] = item["status"];
+                    } else {
+                        userQuests[item["title"]] = item["status"];
+                    }
+                                   
                 });
                 addQuestCompletedChecks(userQuests);
             }
