@@ -3,7 +3,7 @@
   
     "name": "RS Wiki Quest Checker",
     "description": "This extension adds icons next to the quest requirements of a quest, to show whether or not they are completed.",
-    "version": "0.4.0",
+    "version": "0.5.0",
     "author": "Midas Lambrichts",
 
 
@@ -22,6 +22,6 @@
         }
     ],
     "web_accessible_resources": [
-        "assets/images/check.svg", "assets/images/cross.svg"
+        "assets/images/check.svg", "assets/images/cross.svg", "assets/images/inprogress.svg"
     ]
   }

@@ -15,7 +15,9 @@ function addQuestCompletedChecks(userQuests){
             if (userQuests[questTitle] == "NOT_STARTED"){
                 $(this).append(' <img src=' + chrome.extension.getURL('assets/images/cross.svg') + ' style="width:15px">');
             }
-            
+            if (userQuests[questTitle] == "STARTED"){
+                $(this).append(' <img src=' + chrome.extension.getURL('assets/images/inprogress.svg') + ' style="width:15px">');
+            }
         }
     });
 }
