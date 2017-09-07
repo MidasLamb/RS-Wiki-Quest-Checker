@@ -1,6 +1,15 @@
 var skills = ["Attack","Defence","Strength","Constitution","Ranged","Prayer","Magic","Cooking","Woodcutting","Fletching","Fishing","Firemaking","Crafting","Smithing","Mining","Herblore","Agility","Thieving","Slayer","Farming","Runecrafting","Hunter","Construction","Summoning","Dungeoneering","Divination","Invention"
 ]; //Used to turn skill ID's into usable names.
 
+var apiQuestNamesCorrections = [];
+apiQuestNamesCorrections["Great Brain Robbery"] = "The Graet Brain Robbery";
+apiQuestNamesCorrections["Curse of Arrav"] = "The Curse of Arrav";
+apiQuestNamesCorrections["Chosen Commander"] = "The Chosen Commander";
+apiQuestNamesCorrections["Fairy Tale III - Battle at Orks Rift"] = "Fairy Tale III - Orks Rift";
+apiQuestNamesCorrections["Slug Menace"] = "The Slug Menace";
+apiQuestNamesCorrections["Dig Site"] = "The Dig Site";
+
+
 /**
  * Adds the checks to the quest requirements.
  * @param {[quests]} userQuests 
@@ -75,13 +84,15 @@ function loadUserQuests(username, tries){
             } else {
                 var userQuests = [];
                 msg["quests"].forEach(function(item, index){
-                    if (item["title"] === "Curse of Arrav" || item["title"] === "Chosen Commander"){
-                        userQuests["The " + item["title"]] = item["status"];
-                    } else {
-                        userQuests[item["title"]] = item["status"];
+                    userQuests[item["title"]] = item["status"];
+                    if (item["title"] in apiQuestNamesCorrections){
+                        var correctName = apiQuestNamesCorrections[item["title"]];
+                        userQuests[correctName] = item["status"];
+                        console.log("Correction! " + item["title"] + " becomes " + correctName );
                     }
                                    
                 });
+                console.log(userQuests);
                 addQuestCompletedChecks(userQuests);
             }
             
