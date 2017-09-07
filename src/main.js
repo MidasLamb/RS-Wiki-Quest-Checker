@@ -6,7 +6,7 @@ var skills = ["Attack","Defence","Strength","Constitution","Ranged","Prayer","Ma
  * @param {[quests]} userQuests 
  */
 function addQuestCompletedChecks(userQuests){
-    $(".questreq a").each(function(index){
+    $("a").each(function(index){
         if ($(this).html().toLowerCase() != "expand" || $(this).html().toLowerCase() != "collapse"){
             var questTitle = $(this).html();
             if (userQuests[questTitle] == "COMPLETED"){
@@ -15,6 +15,7 @@ function addQuestCompletedChecks(userQuests){
             if (userQuests[questTitle] == "NOT_STARTED"){
                 $(this).append(' <img src=' + chrome.extension.getURL('assets/images/cross.svg') + ' style="width:15px">');
             }
+            
         }
     });
 }
