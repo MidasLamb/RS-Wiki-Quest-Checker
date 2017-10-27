@@ -2,7 +2,7 @@ var skills = ["Attack","Defence","Strength","Constitution","Ranged","Prayer","Ma
 ]; //Used to turn skill ID's into usable names.
 
 var apiQuestNamesCorrections = [];
-apiQuestNamesCorrections["Great Brain Robbery"] = "The Graet Brain Robbery";
+apiQuestNamesCorrections["Great Brain Robbery"] = "The Great Brain Robbery";
 apiQuestNamesCorrections["Curse of Arrav"] = "The Curse of Arrav";
 apiQuestNamesCorrections["Chosen Commander"] = "The Chosen Commander";
 apiQuestNamesCorrections["Fairy Tale III - Battle at Orks Rift"] = "Fairy Tale III - Orks Rift";
