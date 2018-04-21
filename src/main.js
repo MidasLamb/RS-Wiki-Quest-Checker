@@ -1,13 +1,6 @@
-var skills = ["Attack","Defence","Strength","Constitution","Ranged","Prayer","Magic","Cooking","Woodcutting","Fletching","Fishing","Firemaking","Crafting","Smithing","Mining","Herblore","Agility","Thieving","Slayer","Farming","Runecrafting","Hunter","Construction","Summoning","Dungeoneering","Divination","Invention"
-]; //Used to turn skill ID's into usable names.
 
-var apiQuestNamesCorrections = [];
-apiQuestNamesCorrections["Great Brain Robbery"] = "The Graet Brain Robbery";
-apiQuestNamesCorrections["Curse of Arrav"] = "The Curse of Arrav";
-apiQuestNamesCorrections["Chosen Commander"] = "The Chosen Commander";
-apiQuestNamesCorrections["Fairy Tale III - Battle at Orks Rift"] = "Fairy Tale III - Orks Rift";
-apiQuestNamesCorrections["Slug Menace"] = "The Slug Menace";
-apiQuestNamesCorrections["Dig Site"] = "The Dig Site";
+
+
 
 
 /**
@@ -18,15 +11,10 @@ function addQuestCompletedChecks(userQuests){
     $("a").each(function(index){
         if ($(this).html().toLowerCase() != "expand" || $(this).html().toLowerCase() != "collapse"){
             var questTitle = $(this).html();
-            if (userQuests[questTitle] == "COMPLETED"){
-                $(this).append(' <img src=' + chrome.extension.getURL('assets/images/check.svg') + '>');
+            if (questTitle in userQuests){
+                userQuests[questTitle].handleQuest($(this));
             }
-            if (userQuests[questTitle] == "NOT_STARTED"){
-                $(this).append(' <img src=' + chrome.extension.getURL('assets/images/cross.svg') + ' style="width:15px">');
-            }
-            if (userQuests[questTitle] == "STARTED"){
-                $(this).append(' <img src=' + chrome.extension.getURL('assets/images/inprogress.svg') + ' style="width:15px">');
-            }
+            
         }
     });
 }
@@ -84,15 +72,26 @@ function loadUserQuests(username, tries){
             } else {
                 var userQuests = [];
                 msg["quests"].forEach(function(item, index){
-                    userQuests[item["title"]] = item["status"];
+                    var questCompletionObject = null;
+                    switch(item["status"]){
+                        case "COMPLETED":
+                            questCompletionObject = new questCompleted();
+                            break;
+                        case "NOT_STARTED":
+                            questCompletionObject = new questNotStarted();
+                            break;
+                        case "STARTED":
+                            questCompletionObject = new questInProgress();
+                            break;
+                    }
+
+                    userQuests[item["title"]] = questCompletionObject;
+
                     if (item["title"] in apiQuestNamesCorrections){
                         var correctName = apiQuestNamesCorrections[item["title"]];
-                        userQuests[correctName] = item["status"];
-                        console.log("Correction! " + item["title"] + " becomes " + correctName );
-                    }
-                                   
+                        userQuests[correctName] = userQuests[item["title"]];
+                    }                   
                 });
-                console.log(userQuests);
                 addQuestCompletedChecks(userQuests);
             }
             
@@ -137,6 +136,21 @@ function getConfig(func){
     }, func);
 }
 
+function attachColorChange(){
+    var colorGreen = "rgb(57, 234, 57)";
+    $("li").each(function(){
+        $(this).click(function(){
+            if ($(this).css("background-color") == colorGreen){
+                $(this).css("background-color", "");
+            } else {
+                $(this).css("background-color", colorGreen);
+            }
+            
+        });
+        $(this).css("cursor", "pointer");
+    }) ;
+}
+
 /**
  * Load the config and start everything.
  */
@@ -144,9 +158,23 @@ function init(){
     getConfig(function(config){
         loadUserData(config.username, 5);
     });
+    if (window.location.href.indexOf("Quick_guide") !== -1){
+        attachColorChange();
+    }
+    
 }
 
-init();
+$(document).ready(init);
+
+
+
+function rgb2hex(rgb) {
+    rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+    function hex(x) {
+        return ("0" + parseInt(x).toString(16)).slice(-2);
+    }
+    return "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
+}
 
 
 

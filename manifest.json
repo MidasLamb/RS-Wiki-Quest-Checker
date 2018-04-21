@@ -18,7 +18,7 @@
     "content_scripts" : [ 
         {
         "matches" : ["http://runescape.wikia.com/wiki/*"],
-        "js": ["assets/js/jquery-3.2.1.min.js", "src/main.js"]
+        "js": ["assets/js/jquery-3.2.1.min.js", "src/dataArrays.js", "src/completionClasses.js",  "src/main.js"]
         }
     ],
     "web_accessible_resources": [
