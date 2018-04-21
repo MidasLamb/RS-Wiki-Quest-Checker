@@ -20,25 +20,43 @@ function addQuestCompletedChecks(userQuests){
  * @param {[skillName: level]} userLevels 
  */
 function addLevelDetailChecks(userLevels){
-    $(".questdetails-info > ul > li").each(function(index){
-        var textArr = $(this).text().split(" ");
-        var level = textArr[0];
+    $("img").each(function(index){
+        var thieving = false;
+        if($(this).attr("alt") == "Thieving"){
+            console.log($(this));
+            thieving = true;
+            console.log($(this).parent().parent().text());
+        }
+        var onQuestPage = window.location.href.indexOf("/wiki/Quests") !== -1;
+        if (onQuestPage){
+            var textArr = $(this).parent().parent().text().split(new RegExp("> "));
+            var level = textArr[1];
+        } else {
+            var textArr = $(this).parent().parent().text().split(new RegExp(" |<"));
+            var level = textArr[0];
+        }
+        
         if (isNaN(level)){ //Check if it is a number.
             return;
         }
-        var skillElement = $(this).find("a").filter(function(index){
-            //Find the link element which has a skill name.
-            return ($(this).text() in userLevels) 
-        });
-        var skill = skillElement.text();
+        if (!($(this).attr("alt") in userLevels)){
+            return;
+        } 
+        var skill = $(this).attr("alt");
 
         if (level != "" && skill != ""){
             if (userLevels[skill] >= level) {
-                skillElement.append(' <img src=' + chrome.extension.getURL('assets/images/check.svg') + '>');
+                $(this).parent().parent().append(' <img src=' + chrome.extension.getURL('assets/images/check.svg') + '>');
+
             } else {
-                $(this).prepend(userLevels[skill]+"/");
-                skillElement.append(' <img src=' + chrome.extension.getURL('assets/images/cross.svg') + ' style="width:15px">');
+                if (onQuestPage){
+                    $(this).parent().after(" " + userLevels[skill]+"/");
+                } else {
+                    $(this).parent().parent().prepend(userLevels[skill]+"/");
+                }
+                $(this).parent().parent().append(' <img src=' + chrome.extension.getURL('assets/images/cross.svg') + ' style="width:15px">');
             }
+            $(this).parent().parent().css("white-space", "nowrap");
         }
             
     });
