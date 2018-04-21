@@ -2,6 +2,9 @@
 ## What is this?
 This chrome extension adds crosses and checks next to the quest based on quest completion.
 
+### Quick guide feature
+You can now click on the steps in a quick guide to turn it green, so you can easily keep track where you are at!
+
 ## Installation
 ### Easy installation
 You can just install it from the [Chrome Web Store](https://chrome.google.com/webstore/detail/rs-wiki-quest-checker/lkihabnfkocdfnaccjojjblkbagdgaek)! You only have to configure the app afterwards.
