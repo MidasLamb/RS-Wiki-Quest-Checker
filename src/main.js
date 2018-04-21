@@ -134,12 +134,30 @@ function getConfig(func){
 
 function attachColorChange(){
     var colorGreen = "rgb(57, 234, 57)";
-    $("li").each(function(){
-        $(this).click(function(){
+    $("li:not(.questdetails li)").each(function(){
+        $(this).click(function(e){
+            //Do nothing if the list-item was not directly clicked
+            if(e.target !== e.currentTarget) return;
+
             if ($(this).css("background-color") == colorGreen){
                 $(this).css("background-color", "");
             } else {
                 $(this).css("background-color", colorGreen);
+                $(this).find("li").each(function(index) { $(this).css("background-color", colorGreen); });
+            }
+            // Check if we need to color the parent.
+            if ($(this).parent().parent().prop('nodeName') != 'DIV'){
+                var allGreen = true;
+                $(this).parent().children("li").each(function(index) {
+                    if ($(this).css("background-color") != colorGreen){
+                        allGreen =false;
+                    }
+                });
+                if (allGreen){
+                    $(this).parent().parent().css("background-color", colorGreen);
+                } else {
+                    $(this).parent().parent().css("background-color", "");
+                }
             }
             
         });
