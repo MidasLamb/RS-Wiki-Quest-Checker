@@ -1,8 +1,4 @@
 
-
-
-
-
 /**
  * Adds the checks to the quest requirements.
  * @param {[quests]} userQuests 
