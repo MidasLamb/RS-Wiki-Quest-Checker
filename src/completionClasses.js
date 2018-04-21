@@ -9,18 +9,21 @@ class questCompletion{
 
 class questCompleted {
     handleQuest(jq){
-        jq.append(' <img src=' + chrome.extension.getURL('assets/images/check.svg') + '>');
+        jq.append(' <img src=' + chrome.extension.getURL('assets/images/check.svg') + ' style="width:auto; height: 1em; padding-bottom: 0.2em;">');
+        jq.css("white-space", "nowrap");
     }
 }
 
 class questNotStarted {
     handleQuest(jq){
-        jq.append(' <img src=' + chrome.extension.getURL('assets/images/cross.svg') + ' style="width:15px">');
+        jq.append(' <img src=' + chrome.extension.getURL('assets/images/cross.svg') + ' style="width:auto; height: 1em; padding-bottom: 0.2em;">');
+        jq.css("white-space", "nowrap");
     }
 }
 
 class questInProgress{
     handleQuest(jq){
-        jq.append(' <img src=' + chrome.extension.getURL('assets/images/inprogress.svg') + ' style="width:15px">');
+        jq.append(' <img src=' + chrome.extension.getURL('assets/images/inprogress.svg') + ' style="width:auto; height: 1em; padding-bottom: 0.2em;">');
+        jq.css("white-space", "nowrap");
     }
 }
