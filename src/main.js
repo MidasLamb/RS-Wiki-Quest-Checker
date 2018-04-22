@@ -21,12 +21,12 @@ function addQuestCompletedChecks(userQuests){
  */
 function addLevelDetailChecks(userLevels){
     $("img").each(function(index){
-        var thieving = false;
-        if($(this).attr("alt") == "Thieving"){
-            console.log($(this));
-            thieving = true;
-            console.log($(this).parent().parent().text());
-        }
+        // var thieving = false;
+        // if($(this).attr("alt") == "Thieving"){
+        //     console.log($(this));
+        //     thieving = true;
+        //     console.log($(this).parent().parent().text());
+        // }
         var onQuestPage = window.location.href.indexOf("/wiki/Quests") !== -1;
         if (onQuestPage){
             var textArr = $(this).parent().parent().text().split(new RegExp("> "));
@@ -134,6 +134,7 @@ function loadUserSkills(username, tries){
                 msg["skillvalues"].forEach(function(item, index){
                     userLevels[skills[item["id"]]] = item["level"]; 
                 });
+                // console.log(userLevels);
                 addLevelDetailChecks(userLevels);
             }
         }
@@ -152,16 +153,17 @@ function getConfig(func){
 
 function attachColorChange(){
     var colorGreen = "rgb(57, 234, 57)";
+    var highlightClassName = "rs-wiki-quest-checker-highlight";
     $("li:not(.questdetails li)").each(function(){
         $(this).click(function(e){
             //Do nothing if the list-item was not directly clicked
             if(e.target !== e.currentTarget) return;
 
             if ($(this).css("background-color") == colorGreen){
-                $(this).css("background-color", "");
+                $(this).css("background-color", "").removeClass( highlightClassName );
             } else {
-                $(this).css("background-color", colorGreen);
-                $(this).find("li").each(function(index) { $(this).css("background-color", colorGreen); });
+                $(this).css("background-color", colorGreen).addClass( highlightClassName );
+                $(this).find("li").each(function(index) { $(this).css("background-color", colorGreen).addClass( highlightClassName ); });
             }
             // Check if we need to color the parent.
             if ($(this).parent().parent().prop('nodeName') != 'DIV'){
@@ -172,9 +174,9 @@ function attachColorChange(){
                     }
                 });
                 if (allGreen){
-                    $(this).parent().parent().css("background-color", colorGreen);
+                    $(this).parent().parent().css("background-color", colorGreen).addClass( highlightClassName );
                 } else {
-                    $(this).parent().parent().css("background-color", "");
+                    $(this).parent().parent().css("background-color", "").removeClass( highlightClassName );
                 }
             }
             
