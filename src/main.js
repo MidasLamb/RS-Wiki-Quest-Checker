@@ -21,42 +21,61 @@ function addQuestCompletedChecks(userQuests){
  */
 function addLevelDetailChecks(userLevels){
     $("img").each(function(index){
+        if (!($(this).attr("alt") in userLevels)){
+            return;
+        } 
+
         // var thieving = false;
         // if($(this).attr("alt") == "Thieving"){
         //     console.log($(this));
         //     thieving = true;
-        //     console.log($(this).parent().parent().text());
+        //     console.log($(this).parent()[0].nextSibling);
+        //     // console.log($(this).parent().parent().clone().children().remove().end().text().replace(/^[^\d]*|[^\d]*$| /g, "").replace(/[^(\d+\/\d+)\d+]+/g, "\n"));
         // }
         var onQuestPage = window.location.href.indexOf("/wiki/Quests") !== -1;
-        if (onQuestPage){
-            var textArr = $(this).parent().parent().text().split(new RegExp("> "));
-            var level = textArr[1];
-        } else {
-            var textArr = $(this).parent().parent().text().split(new RegExp(" |<"));
-            var level = textArr[0];
+        var textInfront = true;
+        var level;
+        try {
+            // Try to read text infront of the image
+            var leadingText = $(this).parent()[0].previousSibling.textContent;
+            level = (leadingText !== null) ? (leadingText.match(/\d+(?!.*\d+)/) || [null])[0] : null;
+        } catch (error) {
+            textInfront = false;
+            try {
+                // Try to read text behind the image
+                var trailingText = $(this).parent()[0].nextSibling.textContent; 
+                level = (trailingText !== null) ? (trailingText.match(/^\s\d+/) || [null])[0] : null;
+            } catch (error) {
+                // If both fail, go to next object
+                return;
+            }
         }
         
-        if (isNaN(level)){ //Check if it is a number.
+        if (isNaN(level) || level === null){ //Check if it is a number.
             return;
         }
-        if (!($(this).attr("alt") in userLevels)){
-            return;
-        } 
         var skill = $(this).attr("alt");
 
         if (level != "" && skill != ""){
             if (userLevels[skill] >= level) {
-                $(this).parent().parent().append(' <img src=' + chrome.extension.getURL('assets/images/check.svg') + '>');
-
-            } else {
-                if (onQuestPage){
-                    $(this).parent().after(" " + userLevels[skill]+"/");
+                if (textInfront){
+                    $(this).parent().append(' <img src=' + chrome.extension.getURL('assets/images/check.svg') + '>');
                 } else {
-                    $(this).parent().parent().prepend(userLevels[skill]+"/");
+                    $(this).parent().parent().append(' <img src=' + chrome.extension.getURL('assets/images/check.svg') + '>');
                 }
-                $(this).parent().parent().append(' <img src=' + chrome.extension.getURL('assets/images/cross.svg') + ' style="width:15px">');
+                
+            } else {
+                if (textInfront){
+                    var preText = $(this).parent()[0].previousSibling.textContent.replace(/(\d+)(?!.*\d+)/, userLevels[skill] + "/$1");
+                    $(this).parent()[0].previousSibling.textContent = preText;
+                    $(this).parent().append(' <img src=' + chrome.extension.getURL('assets/images/cross.svg') + ' style="width:15px">');
+                } else {
+                    var trailingText = $(this).parent()[0].nextSibling.textContent.replace(/^ (\d+)/, " " + userLevels[skill] + "/$1");
+                    $(this).parent()[0].nextSibling.textContent = trailingText;
+                    $(this).parent().parent().append(' <img src=' + chrome.extension.getURL('assets/images/cross.svg') + ' style="width:15px">');
+                }
             }
-            $(this).parent().parent().css("white-space", "nowrap");
+            $(this).parent().css("white-space", "nowrap");
         }
             
     });
@@ -134,7 +153,6 @@ function loadUserSkills(username, tries){
                 msg["skillvalues"].forEach(function(item, index){
                     userLevels[skills[item["id"]]] = item["level"]; 
                 });
-                // console.log(userLevels);
                 addLevelDetailChecks(userLevels);
             }
         }
