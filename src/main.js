@@ -9,7 +9,7 @@ function addQuestCompletedChecks(userQuests){
             var questTitle = $(this).html();
             if (questTitle in userQuests){
                 userQuests[questTitle].handleQuest($(this));
-            }
+            } 
             
         }
     });
@@ -75,7 +75,13 @@ function addLevelDetailChecks(userLevels){
                     $(this).parent().parent().append(' <img src=' + chrome.extension.getURL('assets/images/cross.svg') + ' style="width:15px">');
                 }
             }
-            $(this).parent().css("white-space", "nowrap");
+
+            if (textInfront) {
+                $(this).parent().css("white-space", "nowrap");
+            } else {
+                $(this).parent().parent().css("white-space", "nowrap");
+            }
+            
         }
             
     });
@@ -121,9 +127,16 @@ function loadUserQuests(username, tries){
                     userQuests[item["title"]] = questCompletionObject;
 
                     if (item["title"] in apiQuestNamesCorrections){
-                        var correctName = apiQuestNamesCorrections[item["title"]];
-                        userQuests[correctName] = userQuests[item["title"]];
-                    }                   
+                        if (typeof(apiQuestNamesCorrections[item["title"]]) === "object") {
+                            for (var i = 0; i < apiQuestNamesCorrections[item["title"]].length; i++) {
+                                var correctName = apiQuestNamesCorrections[item["title"]][i];
+                                userQuests[correctName] = userQuests[item["title"]];
+                            }
+                        } else {
+                            var correctName = apiQuestNamesCorrections[item["title"]];
+                            userQuests[correctName] = userQuests[item["title"]];
+                        }
+                    }
                 });
                 addQuestCompletedChecks(userQuests);
             }
