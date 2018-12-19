@@ -1,9 +1,9 @@
 {
     "manifest_version": 2,
-
+  
     "name": "RS Wiki Quest Checker",
     "description": "This extension adds icons next to the quest requirements of a quest, to show whether or not they are completed.",
-    "version": "0.2.0",
+    "version": "0.7.3",
     "author": "Midas Lambrichts",
 
 
@@ -15,13 +15,13 @@
       "storage",
       "https://apps.runescape.com/"
     ],
-    "content_scripts" : [
+    "content_scripts" : [ 
         {
         "matches" : ["https://runescape.fandom.com/wiki/*", "https://runescape.wiki/w/*"],
-        "js": ["assets/js/jquery-3.2.1.min.js", "src/main.js"]
+        "js": ["assets/js/jquery-3.2.1.min.js", "src/dataArrays.js", "src/completionClasses.js",  "src/main.js"]
         }
     ],
     "web_accessible_resources": [
-        "assets/images/check.svg", "assets/images/cross.svg"
+        "assets/images/check.svg", "assets/images/cross.svg", "assets/images/inprogress.svg"
     ]
   }
